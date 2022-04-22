@@ -1,10 +1,12 @@
 <template>
     <div id="app">
-        <Home msg="Hello world!" />
-        <button @click="count++">Counter: {{count}}</button><br /><br />
-        <button @click="refreshData">Refresh Weather Forecast</button>
-
-        <table class="table table-hover">
+        <Home msg="ASP.NET Core 6.0 WebAPI App using Vue.js 3!" />
+        <button @click="count++" v-if="show">Counter: {{ count }}</button>
+        <div class="info">
+            <strong>Weather forecast refreshed {{ count }} times!</strong>
+            <button style="float:right;" class="btn btn-success" @click="refreshData('weatherforecast');counter()">Refresh</button>
+        </div>
+        <table class="table table-hover table-stripped table-bordered">
             <tr>
                 <th>Date</th>
                 <th>Summary</th>
@@ -12,16 +14,20 @@
                 <th>Temperature C</th>
             </tr>
             <tr v-for="item in weatherforecast" :key="item.Date">
-                <td>{{formatDate(item.Date)}}</td>
-                <td>{{item.Summary}}</td>
-                <td>{{item.TemperatureF}}</td>
-                <td>{{item.TemperatureC}}</td>
+                <td>{{ formatDate(item.Date) }}</td>
+                <td>{{ item.Summary }}</td>
+                <td>{{ item.TemperatureF }}</td>
+                <td>{{ item.TemperatureC }}</td>
             </tr>
         </table>
     </div>
 </template>
 
 <style>
+    .info{
+        margin:10px 15px;
+    }
+
     table {
         border: 2px solid #42b983;
         border-radius: 3px;
@@ -29,7 +35,7 @@
     }
 
     th {
-        background-color: #42b983;
+        background-color: #198754;
         color: rgba(255, 255, 255, 0.66);
         cursor: pointer;
         user-select: none;
@@ -44,11 +50,9 @@
         min-width: 120px;
         padding: 10px 20px;
     }
-
         th.active {
             color: #fff;
         }
-
             th.active .arrow {
                 opacity: 1;
             }
@@ -66,12 +70,16 @@
         data() {
             return {
                 count: 0,
-                weatherforecast: ''
+                weatherforecast: '',
+                show:false
             }
         },
         methods: {
-            refreshData() {
-                axios.get("http://localhost:13183/weatherforecast")
+            counter() {
+                this.count++
+            },
+            refreshData(urlText) {
+                axios.get("http://localhost:13183/" + urlText)
                     .then((response) => {
                         this.weatherforecast = response.data;
                     });
@@ -82,7 +90,8 @@
             },
         },
         mounted: function () {
-            this.refreshData();
+            this.refreshData('weatherforecast');
+            this.counter();
         }
     };
 </script>

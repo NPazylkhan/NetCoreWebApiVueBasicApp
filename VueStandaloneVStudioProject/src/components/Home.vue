@@ -15,5 +15,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .home{
+        display:flex;
+        justify-content:center;
+    }
 </style>
 
